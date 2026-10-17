@@ -1,9 +1,18 @@
 package main
 
 import (
-	day01 "go-redis/src/01day"
+	"time"
+
+	"go-redis/lib/sync/wait"
 )
 
 func main() {
-	day01.Test01()
+	w := &wait.Wait{}
+	w.Add(1)
+
+	w.WaitWithTimeout(time.Second * 2)
+
+	time.Sleep(time.Second * 5)
+	w.Add(-1)
+	time.Sleep(time.Second * 3)
 }
