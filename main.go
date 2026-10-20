@@ -1,18 +1,39 @@
 package main
 
 import (
-	"time"
+	"fmt"
+	"log"
+	"os"
 
-	"go-redis/lib/sync/wait"
+	"go-redis/config"
+	"go-redis/tcp"
 )
 
+const configFile string = "redis.json"
+
+var defaultProperties = &config.ServerProperties{
+	Bind: "0.0.0.0",
+	Port: 6378,
+}
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+
+	return !os.IsNotExist(err) && !info.IsDir()
+}
+
 func main() {
-	w := &wait.Wait{}
-	w.Add(1)
+	if fileExists(configFile) {
+		config.SetupConfig(configFile)
+	} else {
+		config.Properties = defaultProperties
+	}
 
-	w.WaitWithTimeout(time.Second * 2)
+	h := &tcp.EchoHandler{}
 
-	time.Sleep(time.Second * 5)
-	w.Add(-1)
-	time.Sleep(time.Second * 3)
+	err := tcp.ListenAndServerWithSignal(&tcp.Config{
+		Address: fmt.Sprintf("%s:%d", config.Properties.Bind, config.Properties.Port),
+	}, h)
+
+	log.Printf("%v", err)
 }

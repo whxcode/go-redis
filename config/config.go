@@ -1,6 +1,10 @@
 package config
 
-import "io"
+import (
+	"encoding/json"
+	"io"
+	"io/ioutil"
+)
 
 type ServerProperties struct {
 	Bind           string `cfg:bind`
@@ -29,4 +33,14 @@ func parse(src io.Reader) *ServerProperties {
 	config := &ServerProperties{}
 
 	return config
+}
+
+func SetupConfig(filename string) {
+	// 读取配置文件
+	byte, _ := ioutil.ReadFile(filename)
+
+	err := json.Unmarshal(byte, Properties)
+	if err != nil {
+		panic(err)
+	}
 }

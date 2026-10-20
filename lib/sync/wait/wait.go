@@ -18,6 +18,10 @@ func (w *Wait) Done() {
 	w.wg.Done()
 }
 
+func (w *Wait) Wait() {
+	w.wg.Wait()
+}
+
 func (w *Wait) WaitWithTimeout(timeout time.Duration) bool {
 	c := make(chan bool, 1)
 
