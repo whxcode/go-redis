@@ -1,5 +1,28 @@
 package reply
 
+// ErrReply 表示 Redis 中返回未知错误的回复。
+type ErrReply struct {
+	err string
+}
+
+var _ ErrorReply = &ErrReply{}
+
+var ErrBytes = []byte("-Err\r\n")
+
+func (r *ErrReply) Error() string {
+	return "Err"
+}
+
+func (r *ErrReply) ToBytes() []byte {
+	return []byte("-Err " + r.err + "\r\n")
+}
+
+func MakeErrReply(err string) *ErrReply {
+	return &ErrReply{
+		err: err,
+	}
+}
+
 // UnknowErrReply 表示 Redis 中返回未知错误的回复。
 type UnknowErrReply struct{}
 

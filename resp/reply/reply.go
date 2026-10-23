@@ -1,6 +1,7 @@
 package reply
 
 import (
+	"bytes"
 	"strconv"
 
 	"go-redis/interface/resp"
@@ -9,6 +10,7 @@ import (
 // 导入接口所在的包
 
 var (
+	// 空-nil 回复
 	nullBulkReplyBytes = []byte("$-1")
 	CRLF               = "\r\n"
 )
@@ -47,24 +49,87 @@ type MutiBulkReply struct {
 var _ resp.Reply = &MutiBulkReply{}
 
 func (r *MutiBulkReply) ToBytes() []byte {
-	size := len(r.Args)
+	argLen := len(r.Args)
+	var buf bytes.Buffer
 
-	if size == 0 {
-		return nullBulkReplyBytes
-	}
-
-	res := make([]byte, 0, 100)
-	res = append(res, "*"+strconv.Itoa(size)+CRLF...)
+	buf.WriteString("*")
+	buf.WriteString(strconv.Itoa(argLen))
+	buf.WriteString(CRLF)
 
 	for _, arg := range r.Args {
-		res = append(res, "$"+CRLF+strconv.Itoa(len(arg))+CRLF...)
+		if arg == nil {
+			buf.WriteString("$-1")
+			buf.WriteString(CRLF)
+		} else {
+			buf.WriteString("$")
+			buf.WriteString(strconv.Itoa(len(arg)))
+			buf.WriteString(CRLF)
+			buf.WriteString(string(arg))
+			buf.WriteString(CRLF)
+		}
 	}
 
-	return res
+	return buf.Bytes()
 }
 
 func MakeMutiBulkReply(args [][]byte) *MutiBulkReply {
 	return &MutiBulkReply{
 		Args: args,
 	}
+}
+
+// StatusReply 表示 Redis 中的状态回复。
+type StatusReply struct {
+	status string
+}
+
+var _ resp.Reply = &StatusReply{}
+
+func (r *StatusReply) ToBytes() []byte {
+	return []byte("+" + r.status + CRLF)
+}
+
+func MakeStatusReply(status string) *StatusReply {
+	return &StatusReply{
+		status: status,
+	}
+}
+
+// IntReply 表示 Redis 中的整数回复。
+type IntReply struct {
+	status int
+}
+
+var _ resp.Reply = &IntReply{}
+
+func (r *IntReply) ToBytes() []byte {
+	return []byte(":" + strconv.Itoa(r.status) + CRLF)
+}
+
+func MakeIntReply(status int) *IntReply {
+	return &IntReply{
+		status: status,
+	}
+}
+
+// StandarErrReply 表示 Redis 中的标准错误回复。
+type StandarErrReply struct {
+	status string
+}
+
+var _ resp.Reply = &StandarErrReply{}
+
+func (r *StandarErrReply) ToBytes() []byte {
+	return []byte("-" + r.status + CRLF)
+}
+
+func MakeStandarErrReply(status string) *StandarErrReply {
+	return &StandarErrReply{
+		status: status,
+	}
+}
+
+// IsErrReply 判断给定的 resp.Reply 是否是一个错误回复。
+func IsErrReply(r resp.Reply) bool {
+	return r.ToBytes()[0] == '-'
 }

@@ -1,7 +1,11 @@
 package tools
 
-func Reduce[T any, U any](s []T, f func(p, n T) U) U {
-	var r U = f()
+func Map[T any, R any](s []T, f func(t T, i int) R) []R {
+	r := make([]R, len(s))
+
+	for i, v := range s {
+		r[i] = f(v, i)
+	}
 
 	return r
 }
