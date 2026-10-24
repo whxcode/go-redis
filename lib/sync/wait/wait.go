@@ -1,7 +1,6 @@
 package wait
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -27,7 +26,6 @@ func (w *Wait) WaitWithTimeout(timeout time.Duration) bool {
 
 	go func() {
 		defer func() {
-			fmt.Println("关闭通道") // 2
 			close(c)
 		}()
 
@@ -37,10 +35,8 @@ func (w *Wait) WaitWithTimeout(timeout time.Duration) bool {
 
 	select {
 	case <-c:
-		fmt.Println("没有超时")
 		return false
 	case <-time.After(timeout):
-		fmt.Println("超时")
 		return true
 	}
 }

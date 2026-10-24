@@ -41,14 +41,14 @@ func MakeBulkReply(arg []byte) *BulkReply {
 	}
 }
 
-// MutiBulkReply 表示 Redis 中返回的多批量回复。
-type MutiBulkReply struct {
+// MultiBulkReply 表示 Redis 中返回的多批量回复。
+type MultiBulkReply struct {
 	Args [][]byte
 }
 
-var _ resp.Reply = &MutiBulkReply{}
+var _ resp.Reply = &MultiBulkReply{}
 
-func (r *MutiBulkReply) ToBytes() []byte {
+func (r *MultiBulkReply) ToBytes() []byte {
 	argLen := len(r.Args)
 	var buf bytes.Buffer
 
@@ -72,26 +72,26 @@ func (r *MutiBulkReply) ToBytes() []byte {
 	return buf.Bytes()
 }
 
-func MakeMutiBulkReply(args [][]byte) *MutiBulkReply {
-	return &MutiBulkReply{
+func MakeMultiBulkReply(args [][]byte) *MultiBulkReply {
+	return &MultiBulkReply{
 		Args: args,
 	}
 }
 
 // StatusReply 表示 Redis 中的状态回复。
 type StatusReply struct {
-	status string
+	Status string
 }
 
 var _ resp.Reply = &StatusReply{}
 
 func (r *StatusReply) ToBytes() []byte {
-	return []byte("+" + r.status + CRLF)
+	return []byte("+" + r.Status + CRLF)
 }
 
 func MakeStatusReply(status string) *StatusReply {
 	return &StatusReply{
-		status: status,
+		Status: status,
 	}
 }
 
@@ -112,19 +112,19 @@ func MakeIntReply(status int) *IntReply {
 	}
 }
 
-// StandarErrReply 表示 Redis 中的标准错误回复。
-type StandarErrReply struct {
+// StandardErrReply 表示 Redis 中的标准错误回复。
+type StandardErrReply struct {
 	status string
 }
 
-var _ resp.Reply = &StandarErrReply{}
+var _ resp.Reply = &StandardErrReply{}
 
-func (r *StandarErrReply) ToBytes() []byte {
+func (r *StandardErrReply) ToBytes() []byte {
 	return []byte("-" + r.status + CRLF)
 }
 
-func MakeStandarErrReply(status string) *StandarErrReply {
-	return &StandarErrReply{
+func MakeStandardErrReply(status string) *StandardErrReply {
+	return &StandardErrReply{
 		status: status,
 	}
 }

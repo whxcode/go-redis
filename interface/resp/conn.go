@@ -7,6 +7,6 @@ type Connection interface {
 	// 获取当前使用的 DB
 	GetDBIndex() int
 
-	// 切换不用的数据库
+	// 切换当前的数据库
 	SelectDB(db int)
 }

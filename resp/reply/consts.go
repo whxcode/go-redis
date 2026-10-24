@@ -46,7 +46,7 @@ func (r *EmptyBulkReply) ToBytes() []byte {
 	return []byte("$0\r\n\r\n")
 }
 
-func MakeEmtpyBulkReply() *EmptyBulkReply {
+func MakeEmptyBulkReply() *EmptyBulkReply {
 	return &EmptyBulkReply{}
 }
 

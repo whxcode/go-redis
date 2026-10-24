@@ -23,23 +23,23 @@ func MakeErrReply(err string) *ErrReply {
 	}
 }
 
-// UnknowErrReply 表示 Redis 中返回未知错误的回复。
-type UnknowErrReply struct{}
+// UnknownErrReply 表示 Redis 中返回未知错误的回复。
+type UnknownErrReply struct{}
 
-var _ ErrorReply = &UnknowErrReply{}
+var _ ErrorReply = &UnknownErrReply{}
 
-var unknowErrBytes = []byte("-Err unknow\r\n")
+var unknownErrBytes = []byte("-Err unknown\r\n")
 
-func (r *UnknowErrReply) Error() string {
-	return "Err unknow"
+func (r *UnknownErrReply) Error() string {
+	return "Err unknown"
 }
 
-func (r *UnknowErrReply) ToBytes() []byte {
-	return unknowErrBytes
+func (r *UnknownErrReply) ToBytes() []byte {
+	return unknownErrBytes
 }
 
-func MakeUnknowErrReply() *UnknowErrReply {
-	return &UnknowErrReply{}
+func MakeUnknownErrReply() *UnknownErrReply {
+	return &UnknownErrReply{}
 }
 
 // ArgNumErrReply 表示 Redis 中返回参数数量错误的回复。
