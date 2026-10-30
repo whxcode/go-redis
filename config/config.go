@@ -17,19 +17,10 @@ type ServerProperties struct {
 
 	Peers          []string `cfg:peers`
 	Self           string   `cfg:self`
-	Appendonly     string   `cfg:appendonly`
 	appendFilename string   `cfg:appendfilename`
 }
 
 var Properties *ServerProperties
-
-func init() {
-	Properties = &ServerProperties{
-		Bind:       "127.0.0.1",
-		Port:       6379,
-		AppendOnly: false,
-	}
-}
 
 func parse(src io.Reader) *ServerProperties {
 	config := &ServerProperties{}
@@ -52,7 +43,7 @@ func MakeServerProperties() *ServerProperties {
 		Bind:           "0.0.0.0",
 		Port:           6378,
 		DataBases:      16,
-		Appendonly:     "yes",
+		AppendOnly:     true,
 		AppendFilename: "appendonly.aof",
 	}
 }
