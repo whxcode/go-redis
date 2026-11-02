@@ -11,7 +11,7 @@ import (
 	"go-redis/tools"
 )
 
-type Database struct {
+type StandaloneDatabase struct {
 	dbs       [16]*DB
 	aof       *aof.AofHandler
 	dbIndex   int
@@ -19,12 +19,12 @@ type Database struct {
 }
 
 // AfterClientClose implements [databaseImp.Database].
-func (d *Database) AfterClientClose(c resp.Connection) {
+func (d *StandaloneDatabase) AfterClientClose(c resp.Connection) {
 	// panic("unimplemented")
 }
 
 // Close implements [databaseImp.Database].
-func (d *Database) Close() {
+func (d *StandaloneDatabase) Close() {
 	// panic("unimplemented")
 }
 
@@ -35,7 +35,7 @@ func init() {
 }
 
 // Exec implements [databaseImp.Database].
-func (d *Database) Exec(client resp.Connection, args [][]byte) resp.Reply {
+func (d *StandaloneDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
 	cmdName := string(args[0])
 
 	if cmdName == "select" {
@@ -63,10 +63,10 @@ func (d *Database) Exec(client resp.Connection, args [][]byte) resp.Reply {
 	return db.Exec(client, args)
 }
 
-var _ databaseImp.Database = (*Database)(nil)
+var _ databaseImp.Database = (*StandaloneDatabase)(nil)
 
-func MakeDatabase() *Database {
-	dbs := &Database{}
+func MakeStandaloneDatabase() *StandaloneDatabase {
+	dbs := &StandaloneDatabase{}
 	for i := range 16 {
 		dbs.dbs[i] = MakeDB()
 	}

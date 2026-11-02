@@ -15,9 +15,11 @@ type ServerProperties struct {
 	RequirePass    string `cfg:requirePass`
 	DataBases      int    `cfg:databases`
 
-	Peers          []string `cfg:peers`
-	Self           string   `cfg:self`
-	appendFilename string   `cfg:appendfilename`
+	// 其他节点的地址
+	Peers []string `cfg:peers`
+	// 自身的地址
+	Self           string `cfg:self`
+	appendFilename string `cfg:appendfilename`
 }
 
 var Properties *ServerProperties
@@ -45,6 +47,8 @@ func MakeServerProperties() *ServerProperties {
 		DataBases:      16,
 		AppendOnly:     true,
 		AppendFilename: "appendonly.aof",
+		Self:           "127.0.0.1:6378",
+		Peers:          []string{"127.0.0.1:6379", "127.0.0.1:6380"},
 	}
 }
 
