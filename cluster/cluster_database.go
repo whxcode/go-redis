@@ -1,6 +1,7 @@
 package cluster
 
 import (
+	"bytes"
 	"context"
 
 	"go-redis/config"
@@ -8,6 +9,7 @@ import (
 	"go-redis/interface/databaseImp"
 	"go-redis/interface/resp"
 	"go-redis/lib/consistenhash"
+	"go-redis/resp/reply"
 
 	pool "github.com/jolestar/go-commons-pool"
 )
@@ -30,18 +32,27 @@ type ClusterDatabase struct {
 }
 
 // AfterClientClose implements [databaseImp.Database].
-func (*ClusterDatabase) AfterClientClose(c resp.Connection) {
-	panic("unimplemented")
+func (*ClusterDatabase) AfterClientClose(conn resp.Connection) {
+	// panic("unimplemented")
 }
 
 // Close implements [databaseImp.Database].
 func (c *ClusterDatabase) Close() {
-	panic("unimplemented")
+	// panic("unimplemented")
 }
 
 // Exec implements [databaseImp.Database].
 func (c *ClusterDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
-	panic("unimplemented")
+	// PING、SET、SETNX
+	cmdName := string(bytes.ToLower(args[0]))
+	cmdExecutor, ok := cmdTable[cmdName]
+	// log.Printf("Exec cmdName=%s, cmdExecutor=%v, ok=%v", cmdName, cmdExecutor, ok)
+
+	if !ok {
+		return reply.MakeErrReply("ERR unknown command[ '" + cmdName + "']")
+	}
+
+	return cmdExecutor.executor(c, client, c.db, args)
 }
 
 func MakeClustrtDatabase() *ClusterDatabase {

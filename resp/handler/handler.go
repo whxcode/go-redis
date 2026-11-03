@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"strings"
 
-	"go-redis/database"
+	"go-redis/cluster"
 	"go-redis/interface/databaseImp"
 	"go-redis/interface/tcp"
 	"go-redis/lib/sync/atomic"
@@ -27,7 +27,8 @@ type RespHandler struct {
 
 func MakeHandler() *RespHandler {
 	// var db databaseImp.Database = database.MakeEchoDatabase()
-	var db databaseImp.Database = database.MakeStandaloneDatabase()
+	// var db databaseImp.Database = database.MakeStandaloneDatabase()
+	var db databaseImp.Database = cluster.MakeClustrtDatabase()
 
 	return &RespHandler{
 		db: db,

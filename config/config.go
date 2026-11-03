@@ -48,7 +48,7 @@ func MakeServerProperties() *ServerProperties {
 		AppendOnly:     true,
 		AppendFilename: "appendonly.aof",
 		Self:           "127.0.0.1:6378",
-		Peers:          []string{"127.0.0.1:6379", "127.0.0.1:6380"},
+		Peers:          []string{"127.0.0.1:6378", "127.0.0.1:6379", "127.0.0.1:6380"},
 	}
 }
 
