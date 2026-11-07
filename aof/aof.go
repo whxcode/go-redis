@@ -128,6 +128,6 @@ func (a *AofHandler) LoadAof() {
 			fmt.Printf("payload.Data type: %v\n", ref)
 		}
 
-		a.database.Exec(nil, args)
+		a.database.Exec(nil, args, nil)
 	}
 }

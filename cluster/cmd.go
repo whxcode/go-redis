@@ -9,7 +9,11 @@ import (
 
 type (
 	CmdLine  = [][]byte
-	ExecFunc func(c *ClusterDatabase, client resp.Connection, db databaseImp.Database, args CmdLine) resp.Reply
+	ExecFunc func(c *ClusterDatabase,
+		client resp.Connection,
+		db databaseImp.Database,
+		args CmdLine,
+		originMsg []byte) resp.Reply
 )
 
 var cmdTable = make(map[string]*command)

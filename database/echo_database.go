@@ -21,7 +21,7 @@ func (e *EchoDatabase) Close() {
 }
 
 // Exec implements [databaseImp.Database].
-func (e *EchoDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
+func (e *EchoDatabase) Exec(client resp.Connection, args [][]byte, originMsg []byte) resp.Reply {
 	fmt.Println("EchoDatabase.Exec() called with args:", args)
 	for _, arg := range args {
 		fmt.Printf("%s、", string(arg))

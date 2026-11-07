@@ -33,7 +33,7 @@ func (d *DB) Close() {
 
 // Exec 执行命令
 // eg: SET K V -> arity = 3
-func (d *DB) Exec(client resp.Connection, cmd CmdLine) resp.Reply {
+func (d *DB) Exec(client resp.Connection, cmd CmdLine, originMsg []byte) resp.Reply {
 	// PING、SET、SETNX
 	cmdName := string(bytes.ToLower(cmd[0]))
 	cmdExecutor, ok := cmdTable[cmdName]

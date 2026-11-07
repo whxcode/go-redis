@@ -42,7 +42,7 @@ func (c *ClusterDatabase) Close() {
 }
 
 // Exec implements [databaseImp.Database].
-func (c *ClusterDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
+func (c *ClusterDatabase) Exec(client resp.Connection, args [][]byte, originMsg []byte) resp.Reply {
 	// PING、SET、SETNX
 	cmdName := string(bytes.ToLower(args[0]))
 	cmdExecutor, ok := cmdTable[cmdName]
@@ -52,7 +52,7 @@ func (c *ClusterDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply
 		return reply.MakeErrReply("ERR unknown command[ '" + cmdName + "']")
 	}
 
-	return cmdExecutor.executor(c, client, c.db, args)
+	return cmdExecutor.executor(c, client, c.db, args, originMsg)
 }
 
 func MakeClustrtDatabase() *ClusterDatabase {

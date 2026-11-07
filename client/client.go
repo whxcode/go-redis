@@ -25,16 +25,10 @@ func (client *Client) Start() []byte {
 	return out
 }
 
-func (client *Client) Send(port string, args [][]byte) resp.Reply {
-	cmd := []string{"-p", port}
-
-	for _, arg := range args {
-		cmd = append(cmd, string(arg))
-	}
-
-	out, err := exec.Command("redis-cli", cmd...).Output()
-
-	fmt.Println("---->", string(out))
+func (client *Client) Send(port string, originMsg []byte) resp.Reply {
+	c := `printf '` + string(originMsg) + `' | nc -q 0 127.0.0.1 ` + port
+	cmd := exec.Command("bash", "-c", c)
+	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("执行出错:", err)
 		return nil

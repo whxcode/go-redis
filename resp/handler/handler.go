@@ -89,6 +89,7 @@ func (h *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 		}
 
 		var args [][]byte = make([][]byte, 0)
+		var originMsg []byte
 
 		ref := reflect.TypeOf(payload.Data)
 
@@ -96,15 +97,18 @@ func (h *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 		case *reply.StatusReply:
 			statusReply := payload.Data.(*reply.StatusReply)
 			args = append(args, []byte(statusReply.Status))
+			originMsg = statusReply.ToBytes()
 		case *reply.MultiBulkReply:
 			{
-				args = payload.Data.(*reply.MultiBulkReply).Args
+				statusReply := payload.Data.(*reply.MultiBulkReply)
+				args = statusReply.Args
+				originMsg = statusReply.ToBytes()
 			}
 		default:
 			fmt.Printf("payload.Data type: %v\n", ref)
 		}
 
-		result := h.db.Exec(client, args)
+		result := h.db.Exec(client, args, originMsg)
 
 		if result != nil {
 			client.Write(result.ToBytes())

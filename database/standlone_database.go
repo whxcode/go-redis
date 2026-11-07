@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"strconv"
 
 	"go-redis/aof"
@@ -35,8 +36,9 @@ func init() {
 }
 
 // Exec implements [databaseImp.Database].
-func (d *StandaloneDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
+func (d *StandaloneDatabase) Exec(client resp.Connection, args [][]byte, oiringMsg []byte) resp.Reply {
 	cmdName := string(args[0])
+	fmt.Println("----->", args)
 
 	if cmdName == "select" {
 		d.dbIndex, _ = strconv.Atoi(string(args[0]))
@@ -60,7 +62,7 @@ func (d *StandaloneDatabase) Exec(client resp.Connection, args [][]byte) resp.Re
 		d.aof.AddAof(dbIndex, args)
 	}
 
-	return db.Exec(client, args)
+	return db.Exec(client, args, nil)
 }
 
 var _ databaseImp.Database = (*StandaloneDatabase)(nil)

@@ -12,6 +12,10 @@ import (
 )
 
 func main() {
+	okBytes := []byte("+OK\r\n")
+	fmt.Println(okBytes)
+	fmt.Println(string(okBytes))
+
 	// 定义 -p 参数，默认值 6379，描述信息
 	port := flag.Int("p", 6379, "Redis port")
 
